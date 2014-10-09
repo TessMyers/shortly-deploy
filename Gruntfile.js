@@ -3,6 +3,10 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      dist: {
+        src: ['app/**/*.js', 'lib/*.js', 'public/**/*.js'],
+        dest: 'public/dist/built.js', //TODO might have to make a new folder. take out lib entry and concat separately?
+      },
     },
 
     mochaTest: {
@@ -21,11 +25,17 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      build: {
+        src: 'public/dist/built.js',
+        dest: 'public/dist/built.min.js'
+      }
     },
 
     jshint: {
       files: [
-        // Add filespec list here
+        'app/**/*.js',
+        'lib/*.js',
+        'public/**/*.js',
       ],
       options: {
         force: 'true',
@@ -94,18 +104,23 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
+    grunt.task.run(['test']),
+    grunt.task.run(['jshint']),
+    grunt.task.run(['concat']),
+    grunt.task.run(['uglify'])
   ]);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
+
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
   grunt.registerTask('deploy', [
-    // add your deploy tasks here
+
   ]);
 
 
