@@ -15,7 +15,7 @@ var xbeforeEach = function(){ console.log('foo')};
 
 describe('', function() {
 
-  xbeforeEach(function(done) {
+  beforeEach(function(done) {
     // Log out currently signed in user
     request(app)
       .get('/logout')
@@ -82,7 +82,7 @@ describe('', function() {
             Link.findOne({'url' : 'http://www.roflzoo.com/'})
               .exec(function(err,link){
                 if(err) console.log(err);
-                expect(link.title).to.equal('Rofl Zoo - Daily funny animal pictures');
+                expect(link.title).to.equal('Funny animal pictures, funny animals, funniest dogs');
               });
           })
           .end(done);
@@ -90,19 +90,24 @@ describe('', function() {
 
     }); // 'Shortening Links'
 
-    xdescribe('With previously saved urls: ', function() {
+    describe('With previously saved urls: ', function() {
 
       beforeEach(function(done) {
         link = new Link({
           url: 'http://www.roflzoo.com/',
           title: 'Rofl Zoo - Daily funny animal pictures',
           base_url: 'http://127.0.0.1:4568',
+          code: '582d6',
           visits: 0
         })
 
+        //link.save();
+
         link.save(function() {
+          console.log("SAVING INSIDE ")
           done();
         });
+
       });
 
       it('Returns the same shortened code if attempted to add the same URL twice', function(done) {
@@ -135,7 +140,7 @@ describe('', function() {
 
   }); // 'Link creation'
 
-  xdescribe('Priviledged Access:', function(){
+  describe('Priviledged Access:', function(){
 
     // /*  Authentication  */
     // // TODO: xit out authentication
@@ -171,7 +176,7 @@ describe('', function() {
 
   }); // 'Privileged Access'
 
-  xdescribe('Account Creation:', function(){
+  describe('Account Creation:', function(){
 
     it('Signup creates a new user', function(done) {
       request(app)
@@ -207,7 +212,7 @@ describe('', function() {
 
   }); // 'Account Creation'
 
-  xdescribe('Account Login:', function(){
+  describe('Account Login:', function(){
 
     beforeEach(function(done) {
       new User({
